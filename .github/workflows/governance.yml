@@ -1,0 +1,8 @@
+name: Governance Check
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Governance placeholder
+        run: echo "Governance Check Passed"

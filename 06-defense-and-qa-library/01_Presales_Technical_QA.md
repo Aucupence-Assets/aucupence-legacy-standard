@@ -1,216 +1,197 @@
-# Presales Technical Q&A – Extended Library
+# Presales Technical Q&A – Deep Technical Version
 
-This document contains technical Q&A items that frequently come up in presales workshops, RFP or RFI clarifications, and architecture review boards. It is structured by topic so individual answers can be reused or tailored per engagement.
-
----
-
-## 1. Overall Architecture & Technology Stack
-
-### Q1.1: Are you proposing a monolith or microservices architecture?
-
-**Answer:**  
-We design for modularity first, not buzzwords. For most digital platforms we propose a modular, service-based architecture with clear domain boundaries and APIs. In practice, this often looks like microservices for core domains (onboardings, applications, decisions, payments) and a small number of shared services for cross-cutting concerns (identity, notifications, audit).
-
-Where the client team is earlier in its journey, we may start with a well-structured modular monolith but keep boundaries and interfaces explicit so that later extraction into services is manageable. The decision is based on operational maturity and deployment constraints, not fashion.
+This library is intended for discussions with client architects, security teams and senior engineers. Answers are written to show concrete technical thinking, not generic marketing language.
 
 ---
 
-### Q1.2: Which technologies do you typically use?
+## 1. Architecture & Runtime
 
-**Answer:**  
-We work with mainstream, enterprise-ready stacks that your internal teams or future vendors can support:
+### Q1: Why choose Kubernetes (EKS) over a pure serverless approach?
 
-- Backend: Java/Kotlin, .NET, or Go, with frameworks such as Spring Boot or ASP.NET Core.
-- Frontend: React or Angular for web, with REST/GraphQL APIs.
-- Databases: relational stores like PostgreSQL or SQL Server for transactional data; document or key-value stores where justified.
-- Integration: REST/JSON APIs as the default, message queues or streams (e.g. Kafka, RabbitMQ) for asynchronous flows.
-- Cloud: AWS, Azure or GCP, using native services for security, logging and observability.
+We prefer EKS when:
 
-We adapt to client standards where they exist; the architecture is kept portable enough to avoid hard lock-in on a niche technology.
+- There is a mix of latency-sensitive APIs and long-running or stateful workloads.
+- The platform needs sidecars (for example service mesh, logging, tracing, policy agents).
+- There is a realistic chance that parts of the workload might move on-premises or to another cloud in future.
+- The client wants stronger control over runtime, versioning and networking.
 
----
-
-## 2. Scalability & Performance
-
-### Q2.1: How will the platform scale if our transaction volumes triple?
-
-**Answer:**  
-We design for horizontal scalability. All stateless components run in containers and are orchestrated by a platform such as Kubernetes. Scaling is driven by metrics (requests per second, queue depth, CPU/memory) so capacity automatically adjusts within agreed limits.
-
-Stateful components (databases, caches, message brokers) are sized with headroom and scale vertically and/or through partitioning or read replicas. We run performance tests with realistic data and traffic patterns to validate that the target volumes and latency can be achieved before go-live.
+We still use serverless components (Lambda, Step Functions, EventBridge) for specific jobs: low-throughput event handlers, scheduled housekeeping tasks or glue logic. We document the split explicitly so the platform does not turn into “Kubernetes everywhere” by accident.
 
 ---
 
-### Q2.2: How do you ensure performance under peak load, such as campaign launches or seasonal events?
+### Q2: How do you prevent a microservices design from degenerating into a distributed monolith?
 
-**Answer:**  
-We combine three strategies:
+We partition by domain, not layers. Each service owns:
 
-1. **Capacity planning:** simulate expected peaks and pre-scale capacity where predictable (for example salary periods or Black Friday).  
-2. **Graceful degradation:** define which features can be temporarily reduced during overload (non-critical analytics, some non-essential checks) to protect core flows.  
-3. **Back-pressure and rate limiting:** apply per-client and per-endpoint limits at API gateway level, so that a noisy caller does not impact the entire platform.
+- A clear bounded context (for example onboarding, decisioning, disbursement).
+- Its own persistence schema.
+- A small, stable set of APIs and domain events.
 
-These strategies are tested through load and stress tests as part of non-functional testing.
+Cross-service communication uses:
 
----
+- Synchronous APIs when necessary, with clear contracts and backward compatibility rules.
+- Asynchronous events for cross-domain notifications.
 
-## 3. Security, Identity & Access
+We explicitly avoid:
 
-### Q3.1: How do you handle authentication and authorisation?
+- Cross-service database access.
+- “Utility” services that become God objects.
+- Shared “common” schemas that couple unrelated services.
 
-**Answer:**  
-We favour a central identity provider implementing OpenID Connect and/or SAML. Application clients obtain tokens from this provider; APIs validate tokens and apply role- or attribute-based access control.
-
-Admin and operational users are given the minimum required privileges, with just-in-time elevation where necessary. All admin actions are logged for audit. We can integrate with your existing identity platform (e.g. Azure AD, Ping, Keycloak) to avoid introducing a parallel identity silo.
-
----
-
-### Q3.2: How do you protect sensitive customer data?
-
-**Answer:**  
-We apply multiple layers of protection:
-
-- Encryption in transit using TLS for all external and internal traffic.
-- Encryption at rest for databases, object storage and backups using managed key-management services with appropriate key rotation.
-- Field-level protection for highly sensitive attributes where required (for example national IDs, card data) via tokenisation or additional encryption.
-- Strict access control and segregation of duties for users who can see unmasked data.
-
-Data classification is agreed with the client so that we align on which data elements require which level of protection.
+Architecture Decision Records capture these choices and exceptions.
 
 ---
 
-## 4. Data Residency, Privacy & Compliance
+## 2. Performance & Capacity
 
-### Q4.1: How do you meet data residency requirements?
+### Q3: How do you size the initial cluster and database?
 
-**Answer:**  
-We design the deployment so that systems storing personal or regulated data are pinned to the required region or data centre. This is enforced through infrastructure-as-code, so environments cannot accidentally be created outside the allowed regions.
+We express sizing as a process, not a magic number:
 
-If cross-region services are required (for example global monitoring or centralised log analysis), we ensure any data leaving the region is anonymised, pseudonymised or aggregated, and describe this explicitly in the data-protection impact assessment.
+1. Estimate peak RPS and concurrency for critical journeys.
+2. Map to resource needs per request (CPU, memory, DB calls).
+3. Apply realistic utilisation targets (for example aim for 60–70% CPU at peak, not 100%).
+4. Run load tests and adjust.
 
----
+As a starting point for a mid-size lending platform:
 
-### Q4.2: How do you support GDPR or similar regulations?
+- 4–6 pods of core API services (2 vCPU, 4–8 GiB RAM each).
+- Aurora writer with 2–4 vCPUs and 16–32 GiB RAM, plus 2 read replicas.
+- Redis cluster with 2 small or medium nodes for session and cache.
 
-**Answer:**  
-Our design and processes support:
+We then run tests and tune:
 
-- Lawful-basis mapping and purpose limitation for data processing.
-- Data minimisation, including configurable retention and archiving policies.
-- Data-subject rights, such as access and erasure, through traceable mechanisms.
-- Logging and reporting necessary for accountability.
-
-We typically work with the client’s Data Protection Officer or equivalent role to finalise the details and to document these controls in your existing governance framework.
-
----
-
-## 5. Reliability, DR and Business Continuity
-
-### Q5.1: What is your disaster-recovery approach?
-
-**Answer:**  
-We design for resilience at three levels:
-
-1. **Within a site/region:** multi-AZ deployments, rolling updates, health checks and automatic restarts.  
-2. **Between sites/regions:** active-passive or pilot-light strategies, with data replicated asynchronously within RPO targets.  
-3. **Process level:** documented runbooks for failover, regular DR tests with clear roles and communication plans.
-
-The exact RPO/RTO values are agreed with you and validated through scheduled DR exercises.
+- Pod resources and HPA thresholds.
+- Connection pool sizes.
+- DB instance size and number of replicas.
 
 ---
 
-### Q5.2: How do you avoid single points of failure?
+### Q4: How do you protect critical flows during high load?
 
-**Answer:**  
-We identify potential single points (critical services, shared components, network paths) during architecture design. For each, we consider redundancy strategies: clustering, replicas, failover components or alternative routes.
+We treat critical flows (application submission, decision, payment) separately:
 
-We additionally use observability tooling to continuously monitor availability and to detect early signals that a supposedly redundant component is behaving like a single point in practice.
+- Per-route and per-client rate limiting at API gateway or ingress.
+- Circuit breakers at service mesh level so slow downstream services do not cascade failures.
+- Isolation where needed:
+  - Critical services on separate node groups.
+  - Separate Redis or Kafka topics/partitions for high-priority traffic.
 
----
-
-## 6. Integration & APIs
-
-### Q6.1: How do you manage integration with legacy systems?
-
-**Answer:**  
-We typically introduce an integration layer (API gateway or integration services) between the new platform and legacy systems. Responsibilities are clearly separated:
-
-- The platform focuses on business logic and user-facing flows.
-- Integration services handle protocol translation, data mapping and resiliency patterns such as retries or circuit breaking.
-
-Where legacy systems are fragile, we isolate them behind well-defined interfaces and add caching or queuing to decouple user experience from back-end responsiveness.
+We also agree non-critical features that can degrade gracefully (for example background scoring refresh or campaign analytics) so they can be slowed or paused automatically in overload scenarios.
 
 ---
 
-### Q6.2: How do you handle third-party API changes?
+## 3. Security & Compliance
 
-**Answer:**  
-We avoid tight coupling to external APIs by:
+### Q5: How is least privilege enforced in AWS and Kubernetes?
 
-- Wrapping each external API in an internal adapter service,
-- Keeping mapping logic in one place,
-- Introducing contract tests that detect upstream changes early.
+We enforce least privilege at multiple layers:
 
-When feasible, we agree change-notification channels with providers. For high-risk integrations, we keep additional buffer in the plan and design fallbacks so that the platform fails gracefully if an external dependency is temporarily unavailable.
+- AWS IAM:
+  - IAM roles for service accounts (IRSA) linking pods to IAM roles with minimal permissions.
+  - Strict role policies (for example read-only to specific S3 prefixes, limited KMS usage).
+- Kubernetes:
+  - Namespaces per environment or domain.
+  - RBAC roles and role bindings per team.
+  - NetworkPolicies restricting traffic between namespaces and services.
+- Application:
+  - Role/scope checks at API layer.
+  - Feature flags for highly sensitive operations.
 
----
+We back this with:
 
-## 7. DevOps, CI/CD and Environments
-
-### Q7.1: What does your CI/CD pipeline look like?
-
-**Answer:**  
-A typical pipeline includes:
-
-- Static code analysis and unit tests on each commit,
-- Build and packaging of artefacts or container images,
-- Automated deployment to integration and test environments,
-- Execution of API and end-to-end regression suites,
-- Promotion to staging and production under controlled approvals.
-
-Quality gates (test coverage thresholds, static-analysis scores, security scans) are enforced so that changes cannot be promoted with known critical issues.
+- Periodic access reviews.
+- Automated checks on Terraform and Kubernetes manifests with policy-as-code tools.
 
 ---
 
-### Q7.2: How many environments do you expect and how are they used?
+### Q6: What evidence can you provide to auditors that controls are actually in place?
 
-**Answer:**  
-Commonly we have at least:
+We provide a simple control → configuration → evidence mapping. For example:
 
-- Development / integration environments for daily work,
-- System test / regression environments,
-- UAT / pre-production environments aligned with client testing needs,
-- Production.
+- “DB data is encrypted at rest” →
+  - Terraform config for Aurora with KMS CMK →
+  - AWS console/screenshots or API output validating encryption flags.
+- “Admin actions are logged” →
+  - Kubernetes audit log configuration + log samples →
+  - CloudTrail events for IAM role usage.
 
-Additional environments may be set up temporarily for performance testing or dedicated feature teams. We align the environment strategy with your existing practices to avoid unnecessary complexity.
-
----
-
-## 8. Observability & Operations
-
-### Q8.1: How do you ensure that operations teams can run the platform effectively?
-
-**Answer:**  
-We design with operations in mind:
-
-- Centralised logging with structured events and correlation IDs,
-- Metrics and dashboards for technical health (latency, error rates, resource utilisation),
-- Business-level indicators (conversion rates, application status distributions),
-- Alerting rules tuned to minimise noise while catching real issues.
-
-We also provide operations runbooks describing common incidents, diagnostic steps and clear escalation paths.
+Where possible we avoid one-off screenshots and point to reproducible queries or scripts.
 
 ---
 
-### Q8.2: Can the client eventually take over operations or development?
+## 4. DevSecOps & SDLC
 
-**Answer:**  
-Yes. One of our design principles is that the client should have the option to internalise development or operations later. We support this by:
+### Q7: What does your DevSecOps pipeline look like in practice?
 
-- Using mainstream technologies and open standards,
-- Documenting architecture decisions and deployment processes,
-- Involving client staff in design, code review and operations from early stages,
-- Structuring knowledge-transfer and shadowing phases as part of the engagement plan.
+Typical stages:
 
-This reduces long-term dependency on our team and gives you flexibility in how you evolve the platform.
+1. On pull request:
+   - Static code analysis (SonarQube or equivalent).
+   - Unit tests with coverage thresholds.
+   - Dependency scanning and container base image scanning.
+2. On merge to main:
+   - Build container images, scan again.
+   - Deploy to integration via GitOps (for example Argo CD).
+   - Run API, contract and UI regression tests.
+   - Run basic DAST against integration.
+3. Before production:
+   - Change record with risk notes.
+   - Production deployment with smoke tests.
+   - Post-deploy verification and quick rollback option.
 
+We keep pipeline configuration as code (YAML) and subject to code review.
+
+---
+
+### Q8: How are secrets handled?
+
+- Secrets are stored in a secure secret manager (AWS Secrets Manager or similar), not in Git.
+- CI/CD jobs assume short-lived roles to fetch secrets at deploy time.
+- Container images never include environment-specific secrets.
+- Secret scanning tools run periodically on repos to detect accidental leaks.
+
+If a leak is suspected:
+
+- A defined runbook is executed (revoke, rotate, search, monitor).
+- Logs are checked to see if leaked secrets were used.
+
+---
+
+## 5. Observability & Operations
+
+### Q9: How do you ensure that on-call engineers can resolve issues quickly?
+
+We design for debuggability:
+
+- Every incoming request gets a correlation ID that is propagated across service boundaries.
+- Logs are structured to at least include:
+  - Correlation ID.
+  - User or system id (where applicable).
+  - Service and version.
+  - Key parameters and error codes.
+- Dashboards aggregate:
+  - Golden signals (latency, error rate, saturation).
+  - Business-level metrics (applications submitted, approved, declined, by segment).
+
+Runbooks describe:
+
+- How to interpret specific graphs.
+- What first checks to perform.
+- When and how to escalate.
+
+We encourage game days to rehearse these procedures.
+
+---
+
+### Q10: How do you avoid alert fatigue?
+
+We:
+
+- Derive alerts from SLOs rather than raw metrics.
+- Group alerts into incidents and use noise reduction features where available.
+- Regularly review alert history:
+  - Remove alerts that rarely fire or never lead to action.
+  - Adjust thresholds when conditions have changed.
+
+The outcome is a small, meaningful set of alerts that on-call staff trust.

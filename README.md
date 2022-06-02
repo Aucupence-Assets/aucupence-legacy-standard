@@ -4,39 +4,44 @@ Status: Archived snapshot. This repository represents a legacy internal baseline
 - Presales support for software vendors and outsourcing teams,
 - Proposal and RFP response work,
 - Delivery governance design,
-- And enablement/coaching of project managers and tech leads.
+- Enablement and coaching of project managers and tech leads.
 
-This repository is not a product. It is a curated set of working templates, reference checklists and example narratives that show how a small consulting team structures:
+It is not a finished “product” or a methodology book. It is a curated slice of the internal working material that a small consulting team used while helping vendors:
+- Respond to complex RFPs in regulated industries (banking, payments, public sector),
+- Explain non-functional architecture choices to demanding technical reviewers,
+- Defend estimates, commercials and delivery models in steering committees,
+- Train PMs and tech leads to talk about risk, scope and resilience in clear English.
 
-- Complex RFP responses for regulated industries (e.g. banking, payments, public sector),
-- Non-functional requirement (NFR) responses for cloud-native architectures,
-- Estimation logic and commercial defense for offshore/nearshore delivery models,
-- Governance and quality frameworks that can be understood and audited by international clients,
-- Talking points and defense scripts used in presales Q&A and steering committees.
-
-The same assets are frequently reused in training and coaching sessions with:
-- Delivery teams from outsourcing vendors that need to communicate with European or global clients,
-- Project managers and tech leads who must explain their delivery model, estimation logic and risk posture in English,
-- Individual professionals preparing for project-management and digital-banking roles.
-
-No client-identifying information is included. All examples are generic and technology-agnostic enough to be safely reused as baseline material.
+The assets are intentionally abstracted and anonymised. They are detailed enough to show how we think, structure and communicate, but they do not expose client-identifying information or full proprietary playbooks.
 
 ## Structure
 
 1. 01-rfp-decomposition  
-   Compliance matrices, regulatory checklists, bid/no-bid criteria and risk registers that reflect how we decompose a complex RFP into manageable workstreams.
+   Compliance matrices, regulatory checklists, bid / no-bid criteria and risk narratives that show how a complex RFP is unpacked into manageable workstreams and decision points.
 
 2. 02-technical-proposal-kit  
-   Standard non-functional requirement responses, architecture notes and solution overviews for digital lending and transaction-heavy systems.
+   Standard non-functional requirement (NFR) responses, solution-architecture notes and reference patterns for digital lending and other transaction-heavy systems, including performance, security and resilience baselines.
 
 3. 03-scope-estimation-commercial  
-   Effort estimation models, role descriptions, rate-card structures and commercial defense language tailored to offshore/nearshore delivery.
+   Effort-estimation models, role-mix descriptions, rate-card structures and commercial-defense language tailored to offshore / nearshore delivery setups.
 
 4. 04-plan-level-delivery-governance  
-   Delivery governance models, phase plans, milestone definitions and steering-committee structures used in transformation programs.
+   Delivery-governance models, phase plans, milestone and gate definitions, steering-committee structures and a redacted retrospective from a digital-lending programme.
 
 5. 05-quality-and-test-strategy  
-   Test strategies, QA governance, defect SLAs and quality reporting baselines that can be plugged into regulated-client environments.
+   Test strategies, QA governance, CI/CD quality gates, defect SLAs and reporting baselines that can be plugged into regulated-client environments.
 
 6. 06-defense-and-qa-library  
-   Presales technical and commercial Q&A narratives, as well as enablement topics for PMs and tech leads who need to defend their projects to demanding clients.
+   Presales technical and commercial Q&A narratives, plus enablement topics for PMs and tech leads who need to defend their projects and commercials to international clients.
+
+7. api-specs, diagrams, docs, infrastructure  
+   Lightweight placeholders for API contracts, architecture decisions and infrastructure-as-code, used to signal how proposal material, architecture documentation and Terraform-based environments tie together.
+
+## Intended Use
+
+This repository is kept as a reference library to:
+- Demonstrate the style and depth of presales and governance work Aucupence performed,
+- Provide examples for training and coaching sessions,
+- Act as a starting point when assembling new proposal and governance packs.
+
+It is not meant to be a complete, ready-to-run solution. Real engagements extend and adapt these baselines with client-specific detail, additional controls and concrete financials.

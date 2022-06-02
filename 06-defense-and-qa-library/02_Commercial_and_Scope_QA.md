@@ -1,135 +1,95 @@
 # Presales Commercial & Scope Q&A – Standard Library
 
-This library is used when commercial or procurement stakeholders challenge the pricing model, scope handling and risk posture. The goal is to give concrete, defensible answers – not marketing slogans.
+This library is used when procurement or senior stakeholders challenge the commercial model, pricing level or scope discipline.
 
-## 1. Scope and Change Control
+---
 
-Question: Why do you insist on a formal change-control process?
+## 1. Scope & Change Control
 
-Answer:  
-Complex digital projects never stay exactly as initially described. New requirements appear, regulations change, and integration constraints surface. Without a clear change mechanism, there are only two realistic outcomes:
+**Question:** Why do you insist on a formal change-control process?
 
-1. The vendor silently absorbs the extra work and compensates by lowering engineering quality or cutting corners.
-2. The client is surprised by late delays or hidden cost and trust collapses.
+**Answer:**  
+Complex digital projects evolve over time. Without a clear mechanism to manage changes, both parties risk misaligned expectations and hidden cost. A structured change process protects the customer and the vendor by making the impact of each change visible and agreed:
 
-Our approach:
+- We document the requested change in simple language,
+- We assess impact on effort, timeline and risk,
+- We present options (do now, defer, or decline),
+- We only proceed once the option and impact are approved.
 
-- We freeze a scope baseline at the end of discovery (typically after 4–6 weeks).
-- Any change that affects effort, risk or external dependencies is logged as a Change Request (CR).
-- For each CR we provide:
+This avoids “silent” scope creep and keeps the commercial model transparent to governance and audit.
 
-  - Effort impact (plus or minus person-days),
-  - Timeline impact (for example one additional sprint),
-  - Risk impact (for example new integration, new compliance check),
-  - Commercial impact (time-and-materials or fixed-fee uplift).
+---
 
-This protects both sides: the client keeps transparency on why cost and dates move; we avoid silently lowering the engineering standard to “fit the number”.
+## 2. Fixed Price vs Time & Materials
 
-## 2. Fixed Price versus Time and Materials
+**Question:** Can you deliver this entire scope on a fixed price?
 
-Question: Can you deliver this entire scope on a fixed price?
+**Answer:**  
+Fixed price is feasible when requirements are stable and clearly defined. When key assumptions are still open, we normally propose:
 
-Answer:  
-Yes, but only once the uncertainty is low enough that a fixed price is rational for both sides.
+1. A **discovery phase** on Time & Materials to converge on a baseline (requirements, architecture, NFRs, interfaces).  
+2. After discovery, we convert well-understood workstreams into fixed price with:
+   - Clear acceptance criteria,
+   - Explicit assumptions and exclusions,
+   - Defined change-control rules.
 
-We typically use a two-step approach:
+This creates a mixed model: fixed price where risk is manageable, T&M where scope is still moving or heavily dependent on third parties.
 
-1. Discovery on time and materials (T&M)  
-   - Duration: 4–8 weeks, depending on complexity.  
-   - Outputs: refined backlog, agreed NFRs, integration catalogue, risk register.  
-   - At the end we have a realistic estimate based on decomposition and three-point estimation.
+---
 
-2. Selective fixed price  
-   - Stable work packages (for example channels, well-understood services) are moved to fixed price.  
-   - High-uncertainty areas (for example data migration, third-party integrations, regulatory reviews) stay on T&M or have explicit risk buffers.
+## 3. “Your Day Rates Look High”
 
-Example:
+**Question:** Your rates seem higher than some competitors. Why?
 
-- Baseline estimate for build: 900 person-days.  
-- We fix 600 person-days as a fixed-price scope (with 10–15% contingency included).  
-- Remaining 300 person-days (data, legacy integration, change requests) are left on T&M with a capped budget or stage gates.
+**Answer:**  
+We typically explain three levers:
 
-This way procurement gets budget certainty on the stable part, while we avoid pricing in a large risk premium for the unknowns.
+- **Productivity and composition of the team** – we use a smaller, more senior core with clear ownership, supported by standardised tooling and automation.  
+- **Embedded governance and quality** – our commercial model already includes architecture, QA and delivery-governance effort; they are not optional extras.  
+- **Risk profile** – we price to deliver reliably in a regulated environment rather than to win only on headline rate.
 
-## 3. Blended Rate and Nearshore/Offshore Model
+Where useful, we offer to compare *scenario totals* (for example, cost to reach a credible go-live) instead of isolated day rates.
 
-Question: Why is your daily rate higher than some pure offshore vendors?
+---
 
-Answer:  
-We use a blended delivery model rather than a pure low-cost offshore model. A typical setup:
+## 4. Blended Rates vs Role-Based Rates
 
-- Engagement Director and Solution Architect: onshore or nearshore.  
-- Project Manager, Tech Lead, most developers and QA: nearshore or offshore.
+**Question:** Can you give us a single blended rate instead of a detailed rate card?
 
-The blended rate reflects:
+**Answer:**  
+For planning purposes we often provide a high-level blended rate. However, for governance and transparency we keep the underlying role-based rate card:
 
-1. Higher seniority on key roles – we put genuine decision-makers in front of the client.  
-2. Lower coordination waste – clearer architecture and governance reduce re-work.  
-3. Expected productivity – we plan around velocity (story points per sprint), not only headcount.
+- The blended rate is useful for high-level budgeting and benchmarking,  
+- The role-based view is needed for audits, unit-rate comparisons and change requests.
 
-In practice, when we compare effective cost per delivered feature against low-rate, low-governance teams, the total cost is often similar or lower because there is less re-work and fewer failed releases.
+We are happy to work with either format, as long as the underlying structure and assumptions remain traceable.
 
-If requested, we can provide a scenario comparison: same scope with
+---
 
-- low blended rate and low governance, versus
-- higher blended rate and strong governance,
+## 5. Handling Scope Reductions and Cost Pressure
 
-and show the impact on total cost of ownership (TCO).
+**Question:** If our budget is lower than your proposal, what can we do?
 
-## 4. Risk Buffers and Contingency
+**Answer:**  
+Instead of simply cutting rates, we normally explore:
 
-Question: Your estimate includes a contingency line. Are you over-padding the numbers?
+- **Scope trade-offs** – remove or de-scope lower-value features, or move them to a later phase.  
+- **Quality of non-functionals** – adjust some NFR targets where they drive disproportionate cost, while staying within regulatory and business constraints.  
+- **Delivery model adjustments** – modify onshore / offshore mix or cadence, without compromising key governance roles.
 
-Answer:  
-We separate visible effort from explicit contingency on purpose.
+This makes it explicit *what changes* when budget changes, so that executives understand the trade-off instead of assuming “same scope for less”.
 
-- Visible effort is the sum of estimates for known tasks, based on decomposition and three-point estimates.  
-- Contingency is a percentage applied only where uncertainty is real (for example undocumented APIs, unclear data quality, regulatory approvals).
+---
 
-Typical ranges:
+## 6. Overruns and Accountability
 
-- 10–15% for technical uncertainty (for example third-party APIs without stable sandboxes).  
-- 5–10% for governance overhead (for example additional reviews, committees).  
-- 0–5% for migration risks if data has already been profiled.
+**Question:** What happens if you overrun the agreed effort?
 
-We do not apply contingency everywhere. We are prepared to walk through the estimate line by line so the client can see where risk is and where it is not. If the client prefers, we can move some contingency into:
+**Answer:**  
+We separate **estimation error** from **client-driven change**:
 
-- Management reserve held on the client side, or  
-- A change budget earmarked for CRs, rather than embedding everything into the base price.
+- If the work is within agreed scope and the overrun is due to our underestimation, we expect to absorb some or all of that impact.  
+- If the overrun is driven by new requirements, third-party delays or scope changes, we expect that to be visible in the change-control log and reflected in commercials.
 
-## 5. Discounts and Long-Term Engagements
+This principle is discussed up front so that, when issues occur, both sides can refer back to a shared understanding rather than renegotiating basics under pressure.
 
-Question: Can you give us a better price if we commit to a longer contract?
-
-Answer:  
-Yes, but we link discounts to predictability and volume, not to vague “multi-year” statements.
-
-Typical levers:
-
-1. Volume commitment  
-   - If the client commits to a minimum annual volume (for example 1,200 person-days per year), we can reduce the blended rate because we can plan capacity.
-
-2. Longer team stability  
-   - If we can keep a core team together for 12 months or more, ramp-up cost per phase drops and we can reflect this in the rate.
-
-3. Simplified commercial model  
-   - Fewer rate categories and simpler invoicing (for example one blended rate for all developers) reduces overhead and allows a modest discount.
-
-What we avoid is an arbitrary headline discount that later forces us to staff the project with inexperienced people just to make the numbers work. The goal is to keep team quality and delivery standard fixed and adjust price through genuine efficiency, not through cutting corners.
-
-## 6. Handling Scope Creep Without Constant Renegotiation
-
-Question: Are you going to raise a change request for every small requirement tweak?
-
-Answer:  
-No. We distinguish between:
-
-- Noise-level changes: small clarifications, copy tweaks, minor UI changes that we absorb within the sprint.  
-- Material changes: new user journeys, new integrations, new regulatory requirements, or anything that displaces already agreed scope.
-
-Only the material changes become CRs. To avoid friction:
-
-- We agree a tolerance band up front (for example up to 5–10% of effort can move within the baseline scope without a CR).  
-- We use the backlog and release plan as the single source of truth – if something pushes other items out of scope or out of the release window, it should be treated as a change and discussed.
-
-This keeps governance practical: the client is not bombarded with paperwork for every pixel change, but there is a clear mechanism for changes that truly affect time, cost or risk.

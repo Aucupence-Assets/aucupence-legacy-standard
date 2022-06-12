@@ -1,7 +1,9 @@
-Purpose: Used when drafting technical proposals & architecture baselines.
-Outcome: Faster proposal drafting, reusable architecture reasoning.
+# Module 02 – Technical Proposal Kit
 
-Contains:
-- NFR → Architecture alignment notes
-- Reference architecture & trade-offs
-- Abstracted blueprint diagrams (not full IP)
+This module contains reusable baselines for architecture and NFR responses used in proposal-stage documentation.
+
+The content emphasises:
+- Multi-view solution framing (logical, integration, data, security, operability).
+- Audit-ready NFR narratives with measurable targets and negotiable assumptions.
+- Cloud and DevSecOps language sufficient for technical scoring without exposing proprietary implementation.
+

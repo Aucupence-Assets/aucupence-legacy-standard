@@ -1,37 +1,32 @@
-# Data Platform & Security Q&A (12)
+# Data Platform & Security Q&A
 
-## Q1. How do you handle PII across environments?
-We enforce masking and tokenization in non-prod. Access is role-based and audited. Synthetic datasets are preferred for offshore teams.
+---
 
-## Q2. How do you ensure GDPR-aligned data handling?
-We map lawful basis, retention and data-subject rights to operational processes. Data minimization is enforced in design reviews. Logs avoid unnecessary PII.
+## Data Governance
 
-## Q3. What is your data governance baseline?
-We define ownership, lineage and quality rules. Critical datasets have validation checks and reconciliation routines. Governance cadence aligns with delivery forums.
+**Q1**: How do you manage data lineage in transformation programs?  
+**A**: We document source-to-target mappings, define ownership, and align retention and access rules with regulatory expectations.
 
-## Q4. How do you choose between warehouse and lakehouse?
-We evaluate query patterns, cost profile and latency needs. Warehouse suits structured reporting with strong governance. Lakehouse supports mixed workloads when maturity exists.
+**Q2**: What is your approach to data migration risk?  
+**A**: Early profiling, sample-based reconciliation plans, phased cutover options and explicit contingency buffers.
 
-## Q5. How do you manage schema evolution?
-Backward-compatible changes by default. Breaking changes require versioned contracts. A registry or governance gate enforces compatibility rules.
+---
 
-## Q6. How do you support CDC patterns?
-We use CDC for low-latency replication where justified. Idempotent processing and checkpointing are mandatory. Reconciliation validates integrity.
+## Privacy and Residency
 
-## Q7. How do you secure data pipelines?
-IAM least privilege, network segmentation and encrypted storage. Secrets are centrally managed and rotated. Access logs are retained per policy.
+**Q3**: How do you address data residency constraints?  
+**A**: We propose region-locked data stores and clarify which non-PII components may be multi-region.
 
-## Q8. How do you handle long retention requirements?
-We separate hot vs cold storage tiers. Immutable storage is used for audit-grade logs. Retrieval processes are documented and tested.
+**Q4**: How do you handle anonymization for lower environments?  
+**A**: We define masking rules and synthetic data strategies as part of delivery readiness.
 
-## Q9. How do you approach analytics vs OLTP separation?
-Operational systems remain optimized for transactions. Analytics uses replicated or curated datasets. This reduces performance contention.
+---
 
-## Q10. How do you address model risk if AI is used?
-We require explainability expectations and monitoring thresholds. Data drift and bias checks are defined where applicable. Human override processes are documented.
+## Security Assurance
 
-## Q11. How do you handle cross-border data constraints?
-We localize PII and restrict access by region. Processing roles are segmented by policy. Transfers require explicit contractual and technical controls.
+**Q5**: What evidence can you provide without formal certifications?  
+**A**: We outline compensating controls, internal audit cadence and a credible certification roadmap with milestones.
 
-## Q12. What evidence do you provide for security due diligence?
-Policy summaries, scan reports and pipeline controls mappings. Access review records and incident procedures. A concise control-to-evidence matrix for auditors.
+**Q6**: How do you handle third-party vendor risk?  
+**A**: We reference due diligence checklists and flow-down of security obligations in subcontracting models.
+

@@ -1,6 +1,10 @@
-Purpose: Quality as a first-class citizen in delivery.
-Outcome: Show we ship reliably, not “hope it works”.
+# Module 05 – Quality & Test Strategy
 
-Contains:
-- CI/CD quality gate concept
-- Performance+security test anchor points
+This module documents test governance and CI quality gates that can be referenced in proposals.
+
+It includes:
+- Testing-pyramid baselines.
+- Automated gate thresholds.
+- Defect SLAs and release readiness signals.
+- Audit-friendly evidence expectations.
+

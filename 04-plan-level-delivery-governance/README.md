@@ -1,7 +1,9 @@
-Purpose: Delivery governance skeleton to de-risk execution.
-Outcome: Show we know how to run programs & avoid chaos.
+# Module 04 – Delivery Governance
 
-Contains:
-- RAID / decision / escalation path
-- Sample governance calendar
-- Abstracted digital lending retrospective case
+This module provides reference governance patterns for multi-site transformation delivery.
+
+It focuses on:
+- Layered governance (steering, engagement, squad).
+- Evidence-driven cadence and decision logs.
+- RACI and escalation patterns suitable for regulated clients.
+

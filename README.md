@@ -2,7 +2,7 @@
 
 Status: Archived snapshot. This repository represents a legacy internal baseline used for structured presales and delivery governance support.
 
-Aucupence works as a behind-the-scenes consulting partner for software vendors and outsourcing teams facing global client standards. The assets here illustrate how a small specialist team translates engineering capability into review-ready proposal material for regulated and high-expectation environments.
+
 
 This library is routinely referenced in three engagement types:
 - Vendor-side presales and RFP response support for fintech, payments, and public-sector programs.
